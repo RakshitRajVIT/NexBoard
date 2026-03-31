@@ -74,18 +74,32 @@ function NoticeFeed({ notices, onOpenDetail }) {
         </div>
       </header>
 
-      <div className="section-title">
-        <h2><i className="fa-solid fa-thumbtack text-accent"></i> Pinned Notices</h2>
-        <p>Critical campus updates</p>
-      </div>
-      <div className="pinned-grid">
-        {pinnedNotices.length > 0 ? (
-          pinnedNotices.map(n => <NoticeCard key={n.id} notice={n} onClick={onOpenDetail} />)
-        ) : (
-          <div className="empty-state" style={{ padding: '2rem' }}>
-            <p>No urgent notices pinned at the moment.</p>
+      {/* Pinned Notices Section */}
+      <div className="pinned-section">
+        <div className="section-title pinned-header">
+          <div className="pinned-title-wrapper">
+            <span className="pinned-icon-badge">
+              <i className="fa-solid fa-thumbtack"></i>
+            </span>
+            <div>
+              <h2>Pinned Notices</h2>
+              <p>Critical campus updates • Max 3 pinned</p>
+            </div>
           </div>
-        )}
+          {pinnedNotices.length > 0 && (
+            <span className="pinned-count">{pinnedNotices.length}/3</span>
+          )}
+        </div>
+        <div className="pinned-grid">
+          {pinnedNotices.length > 0 ? (
+            pinnedNotices.map(n => <NoticeCard key={n.id} notice={n} onClick={onOpenDetail} isPinned={true} />)
+          ) : (
+            <div className="empty-state pinned-empty" style={{ padding: '2rem' }}>
+              <i className="fa-solid fa-thumbtack" style={{ fontSize: '1.5rem', opacity: 0.3 }}></i>
+              <p>No notices pinned at the moment.</p>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="section-title mt-2">

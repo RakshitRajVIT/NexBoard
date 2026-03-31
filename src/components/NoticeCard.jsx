@@ -5,7 +5,7 @@ function formatDate(isoString) {
   return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-function NoticeCard({ notice, onClick }) {
+function NoticeCard({ notice, onClick, isPinned }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -37,9 +37,9 @@ function NoticeCard({ notice, onClick }) {
   } : {};
 
   return (
-    <div style={{ perspective: '1000px' }} className="notice-card-wrapper">
+    <div style={{ perspective: '1000px' }} className={`notice-card-wrapper ${isPinned ? 'pinned-card-wrapper' : ''}`}>
       <article 
-        className={`notice-card ${isHovered ? 'hovered' : ''}`} 
+        className={`notice-card ${isHovered ? 'hovered' : ''} ${isPinned ? 'pinned-card' : ''}`} 
         onClick={() => onClick(notice)} 
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
@@ -51,6 +51,12 @@ function NoticeCard({ notice, onClick }) {
           '--mouse-y': `${mousePos.y}px`
         }}
       >
+      {isPinned && (
+        <div className="pinned-ribbon">
+          <i className="fa-solid fa-thumbtack"></i>
+          <span>PINNED</span>
+        </div>
+      )}
       <div className="card-header">
         <div className="badges">
           <span className={`badge urgency-${notice.urgency.toLowerCase()}`}>{notice.urgency}</span>

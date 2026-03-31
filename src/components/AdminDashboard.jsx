@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { CATEGORIES } from '../data';
+import { uploadToCloudinary, isCloudinaryConfigured } from '../cloudinary';
 
 function AdminDashboard({ onCreateNotice }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [formData, setFormData] = useState({
     title: '',
     category: 'Academic',
@@ -16,24 +18,36 @@ function AdminDashboard({ onCreateNotice }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setUploadProgress(0);
 
-    let mockUploadedUrl = null;
+    let uploadedUrl = null;
     if (file) {
-      await new Promise(r => setTimeout(r, 1500)); // fake network
-      mockUploadedUrl = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=600';
+      const result = await uploadToCloudinary(file, (progress) => {
+        setUploadProgress(progress);
+      });
+      
+      if (result.success) {
+        uploadedUrl = result.url;
+        if (result.demo) {
+          console.log('Using demo URL - configure Cloudinary for real uploads');
+        }
+      } else {
+        console.error('Upload failed:', result.error);
+      }
     }
 
     const newNotice = {
       id: 'n_' + Date.now().toString(),
       ...formData,
       expiry: new Date(formData.expiry).toISOString(),
-      attachment: mockUploadedUrl,
+      attachment: uploadedUrl,
       datePosted: new Date().toISOString()
     };
 
     onCreateNotice(newNotice);
     setIsSubmitting(false);
-    setFormData({ title: '', category: 'Academic', urgency: 'Normal', expiry: '', desc: '' });
+    setUploadProgress(0);
+    setFormData({ title: '', category: 'Academic', urgency: 'Normal', expiry: '', desc: '', isPinned: false });
     setFile(null);
   };
 
@@ -162,8 +176,30 @@ function AdminDashboard({ onCreateNotice }) {
               {file && (
                 <p className="file-name" style={{ display: 'block' }}>{file.name}</p>
               )}
+              {isSubmitting && file && uploadProgress > 0 && (
+                <div className="upload-progress" style={{ marginTop: '0.5rem', width: '100%' }}>
+                  <div style={{ 
+                    height: '4px', 
+                    background: 'rgba(99, 102, 241, 0.2)', 
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{ 
+                      height: '100%', 
+                      width: `${uploadProgress}%`, 
+                      background: 'var(--accent-primary)',
+                      transition: 'width 0.2s ease'
+                    }}></div>
+                  </div>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                    Uploading... {uploadProgress}%
+                  </span>
+                </div>
+              )}
             </div>
-            <small className="text-muted"><i className="fa-solid fa-circle-info"></i> Files will be uploaded via Cloudinary simulation</small>
+            <small className="text-muted">
+              <i className="fa-solid fa-circle-info"></i> {isCloudinaryConfigured() ? 'Files uploaded via Cloudinary' : 'Configure Cloudinary for real uploads (demo mode active)'}
+            </small>
           </div>
 
           <div className="form-actions">

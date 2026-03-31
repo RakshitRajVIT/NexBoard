@@ -1851,3 +1851,146 @@ input:checked+.slider:before {
 .animate-shake {
     animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
 }
+
+/* ================== PINNED NOTICES SECTION ================== */
+.pinned-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.pinned-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.pinned-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.pinned-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pinned-icon-badge {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(99, 102, 241, 0.6), 0 0 40px rgba(99, 102, 241, 0.2); }
+}
+
+.pinned-header h2 {
+    margin-bottom: 0.15rem;
+    font-size: 1.25rem;
+}
+
+.pinned-header p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.pinned-count {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--accent-primary);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.pinned-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.pinned-empty {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Pinned Card Specific Styles */
+.pinned-card-wrapper {
+    position: relative;
+}
+
+.pinned-card {
+    border: 1px solid rgba(99, 102, 241, 0.3) !important;
+    background: linear-gradient(135deg, rgba(20, 20, 25, 0.9), rgba(30, 25, 40, 0.8)) !important;
+}
+
+.pinned-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(236, 72, 153, 0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.pinned-ribbon {
+    position: absolute;
+    top: 12px;
+    right: -30px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-hover));
+    color: white;
+    padding: 0.25rem 2rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    z-index: 5;
+}
+
+.pinned-ribbon i {
+    font-size: 0.6rem;
+}

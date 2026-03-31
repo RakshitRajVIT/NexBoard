@@ -9,6 +9,7 @@ import PushModal from './components/PushModal';
 import DetailModal from './components/DetailModal';
 import ToastContainer from './components/ToastContainer';
 import { DUMMY_NOTICES } from './data';
+import { onForegroundMessage, isFirebaseConfigured } from './firebase';
 
 function App() {
   // State
@@ -44,6 +45,24 @@ function App() {
 
     if (!localStorage.getItem('nexboard_role_selected')) {
       setLoginModalOpen(true);
+    }
+
+    // Setup FCM foreground message handler
+    if (isFirebaseConfigured()) {
+      const unsubscribe = onForegroundMessage((payload) => {
+        const title = payload.notification?.title || 'New Notice';
+        const body = payload.notification?.body || '';
+        showToast(title, body, 'info');
+        
+        // Also show browser notification if permitted
+        if (Notification.permission === 'granted') {
+          new Notification(title, {
+            body,
+            icon: 'https://ui-avatars.com/api/?name=NB&background=6366f1&color=fff'
+          });
+        }
+      });
+      return () => unsubscribe();
     }
   }, []);
 
