@@ -6,19 +6,21 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
-// TODO: Replace with your Firebase project configuration
+// Firebase configuration - using environment variables for security
+// In development: create a .env file (use .env.example as template)
+// In production: set these in your hosting platform (Vercel, Netlify, etc.)
 const firebaseConfig = {
-  apiKey: "AIzaSyBnHIcvixGMqa6liRtEQAWzrA9QPhCYZCc",
-  authDomain: "nexboard-efa29.firebaseapp.com",
-  projectId: "nexboard-efa29",
-  storageBucket: "nexboard-efa29.firebasestorage.app",
-  messagingSenderId: "983297649211",
-  appId: "1:983297649211:web:c04b4034bfc3997a080a1e",
-  measurementId: "G-2ZYZ15FP4C"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBnHIcvixGMqa6liRtEQAWzrA9QPhCYZCc",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "nexboard-efa29.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "nexboard-efa29",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "nexboard-efa29.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "983297649211",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:983297649211:web:c04b4034bfc3997a080a1e",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-2ZYZ15FP4C"
 };
 
-// TODO: Replace with your VAPID key from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
-const VAPID_KEY = "BC7AZDgxq029I3mVvE7AyNEuRwLVhdjvB0_JCwb8Ej2gLK1ZRt1mWVnIpH-qTfFrwlfb7XfRqM_rYVV7M8DsJ8A";
+// VAPID key from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
+const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY || "BC7AZDgxq029I3mVvE7AyNEuRwLVhdjvB0_JCwb8Ej2gLK1ZRt1mWVnIpH-qTfFrwlfb7XfRqM_rYVV7M8DsJ8A";
 
 // Initialize Firebase
 let app;
@@ -83,7 +85,9 @@ export function onForegroundMessage(callback) {
 
 // Check if Firebase is properly configured
 export function isFirebaseConfigured() {
-  return firebaseConfig.apiKey !== "YOUR_API_KEY" && VAPID_KEY !== "YOUR_VAPID_KEY";
+  return firebaseConfig.apiKey && 
+         firebaseConfig.apiKey !== "YOUR_API_KEY" && 
+         VAPID_KEY !== "YOUR_VAPID_KEY";
 }
 
 export { messaging };
